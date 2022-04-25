@@ -3,8 +3,8 @@ const User = mongoose.model(
   "User",
   new mongoose.Schema({
     username: String,
-    email: String,
     password: String,
+    cin: String,
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,

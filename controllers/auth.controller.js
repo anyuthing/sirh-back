@@ -7,9 +7,10 @@ var bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
   const user = new User({
+    cin: req.body.cin,
     username: req.body.username,
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8),
+    password: bcrypt.hashSync(req.body.cin.toString(), 8),
+    roles: [req.body.role],
   });
   user.save((err, user) => {
     if (err) {
@@ -57,7 +58,7 @@ exports.signup = (req, res) => {
 
 exports.signin = (req, res) => {
   User.findOne({
-    username: req.body.username,
+    cin: req.body.cin,
   })
     .populate("roles", "-__v")
     .exec((err, user) => {
@@ -66,7 +67,7 @@ exports.signin = (req, res) => {
         return;
       }
       if (!user) {
-        return res.status(404).send({ message: "User Not found." });
+        return res.status(404).send({ message: "Utilisateur non trouvé" });
       }
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
@@ -75,7 +76,7 @@ exports.signin = (req, res) => {
       if (!passwordIsValid) {
         return res.status(401).send({
           accessToken: null,
-          message: "Invalid Password!",
+          message: "Mot de pass invalide. ",
         });
       }
       var token = jwt.sign({ id: user.id }, config.secret, {
@@ -88,7 +89,7 @@ exports.signin = (req, res) => {
       res.status(200).send({
         id: user._id,
         username: user.username,
-        email: user.email,
+        cin: user.cin,
         roles: authorities,
         accessToken: token,
       });
