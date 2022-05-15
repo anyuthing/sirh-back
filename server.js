@@ -3,9 +3,10 @@ const cors = require("cors");
 const app = express();
 const db = require("./models/index");
 const dbConfig = require("./config/db.config");
+const path = require("path");
 
 var corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "http://localhost:3011",
 };
 app.use(cors(corsOptions));
 // parse requests of content-type - application/json
@@ -14,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
+  res.json({ message: "Welcome to Sirh application." });
 });
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

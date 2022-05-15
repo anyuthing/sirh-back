@@ -13,5 +13,7 @@ module.exports = function (app) {
     [verifySignUp.checkDuplicateCin, verifySignUp.checkRolesExisted],
     controller.signup
   );
+  app.post("/api/auth/DemandeRn", controller.AddDemande);
   app.post("/api/auth/signin", controller.signin);
+  app.post("/api/auth/verify_token", controller.verify_token);
 };

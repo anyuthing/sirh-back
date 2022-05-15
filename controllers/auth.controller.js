@@ -2,15 +2,48 @@ const config = require("../config/auth.config");
 const db = require("../models");
 const User = db.user;
 const Role = db.role;
+const DemandeRn = db.Demande;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+exports.AddDemande = (req, res) => {
+  const Demande = new DemandeRn({
+    cin: req.body.cin,
+    username: req.body.username,
+    id: req.body.id,
+    demande: req.body.demande,
+  });
 
+  const dem = DemandeRn.findOne({ id: { $in: req.body.id } }, (err, dema) => {
+    if (dema) {
+      res.status(404).send({ message: "vous avez déja fait une demande" });
+      return;
+    } else {
+      Demande.save((err, Demande) => {
+        res.status(200).send({ message: "Application faite avec succées" });
+        return;
+      });
+    }
+  });
+
+  /*  if (dem) {
+   
+    res.status(404).send({ message: "vous avez déja fait une demande" });
+    return;
+  } else {
+    Demande.save((err, Demande) => {
+      res.status(200).send({ message: "Application faite avec succées" });
+      return;
+    });
+  } */
+};
 exports.signup = (req, res) => {
   const user = new User({
     cin: req.body.cin,
     username: req.body.username,
     password: bcrypt.hashSync(req.body.cin.toString(), 8),
     roles: [req.body.role],
+    position: req.body.position,
+    children: req.body.children,
   });
   user.save((err, user) => {
     if (err) {
@@ -56,6 +89,10 @@ exports.signup = (req, res) => {
   });
 };
 
+exports.verify_token = (req, res) => {
+  res.status(200).send({ api_token: req.body.api_token });
+};
+
 exports.signin = (req, res) => {
   User.findOne({
     cin: req.body.cin,
@@ -91,7 +128,7 @@ exports.signin = (req, res) => {
         username: user.username,
         cin: user.cin,
         roles: authorities,
-        accessToken: token,
+        api_token: token,
       });
     });
 };
