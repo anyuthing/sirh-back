@@ -10,10 +10,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/multer": "^1.4.7",
+    "@types/multer-s3": "^2.7.12",
+    "aws-sdk": "^2.1136.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.17.3",
+    "fs": "^0.0.1-security",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.3.1"
+    "mongoose": "^6.3.1",
+    "multer": "^1.4.4",
+    "multer-s3": "^2.10.0",
+    "react-util": "^3.0.1"
   }
 }

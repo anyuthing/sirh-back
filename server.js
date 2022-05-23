@@ -1,13 +1,17 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+
 const db = require("./models/index");
 const dbConfig = require("./config/db.config");
 const path = require("path");
 
+global.__basedir = __dirname;
+
 var corsOptions = {
   origin: "http://localhost:3011",
 };
+
 app.use(cors(corsOptions));
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -17,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to Sirh application." });
 });
+
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
@@ -72,3 +77,4 @@ function initial() {
     }
   });
 }
+app.use("/uploads", express.static("uploads"));

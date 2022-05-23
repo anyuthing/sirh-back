@@ -6,4 +6,6 @@ db.user = require("./user.model");
 db.role = require("./role.model");
 db.ROLES = ["user", "admin", "moderator"];
 db.Demande = require("./demandeRn.model");
+db.DemaneJ = require("./demandeJS.model");
+db.DemandeP = require("./demandePret.model");
 module.exports = db;

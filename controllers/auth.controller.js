@@ -11,6 +11,7 @@ exports.AddDemande = (req, res) => {
     username: req.body.username,
     id: req.body.id,
     demande: req.body.demande,
+    inscription: req.body.inscription,
   });
 
   const dem = DemandeRn.findOne({ id: { $in: req.body.id } }, (err, dema) => {
@@ -18,9 +19,23 @@ exports.AddDemande = (req, res) => {
       res.status(404).send({ message: "vous avez déja fait une demande" });
       return;
     } else {
+      if (req.files) {
+        let path = "";
+        req.files.forEach(function (files, index, arr) {
+          path = path + files.path + ",";
+        });
+        path = path.substring(0, path.lastIndexOf(","));
+        Demande.inscription = path;
+      }
+
       Demande.save((err, Demande) => {
-        res.status(200).send({ message: "Application faite avec succées" });
-        return;
+        if (err) {
+          res.status(500).send({ message: err });
+          return;
+        } else {
+          res.status(200).send({ message: "Application faite avec succées" });
+          return;
+        }
       });
     }
   });
@@ -40,9 +55,9 @@ exports.signup = (req, res) => {
   const user = new User({
     cin: req.body.cin,
     username: req.body.username,
-    password: bcrypt.hashSync(req.body.cin.toString(), 8),
+    password: bcrypt.hashSync(req.body.password.toString(), 8),
     roles: [req.body.role],
-    position: req.body.position,
+    grade: req.body.grade,
     children: req.body.children,
   });
   user.save((err, user) => {

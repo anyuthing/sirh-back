@@ -12,7 +12,6 @@ const User = mongoose.model(
     username: String,
     password: String,
     cin: String,
-    position: String,
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -25,6 +24,7 @@ const User = mongoose.model(
       name: String,
       education: String,
     },
+    grade: String,
   })
 );
 module.exports = User;

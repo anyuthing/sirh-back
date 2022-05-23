@@ -15,20 +15,30 @@ module.exports = function (app) {
     next();
   });
   app.get("/api/user/countRows", controller.countRows);
+  app.post("/api/user/upload", controller.upload);
   app.get("/api/user/all", controller.allAccess);
   app.post("/api/user/deleteUser", controller.deleteUser);
   app.post("/api/user/getUser", controller.getUser);
+  app.post("/api/user/getDemandePret", controller.getDemandePret);
   app.get(
     "/api/user/getList",
 
     controller.getList
   );
+  app.get(
+    "/api/user/getDemandeJs",
+
+    controller.getListDemandeJs
+  );
+  app.get("/api/user/ListeDemandeRn", controller.getListDemandeRn);
   app.get("/api/user/getRapport", controller.getRapport);
   app.get(
-    "/api/user/ListeDemandeRn",
+    "/api/user/ListeDemandesPret",
 
-    controller.getListDemandeRn
+    controller.getListPret
   );
+  app.post("/api/user/DemandeJs", controller.AddDemandeJs);
+  app.post("/api/user/DemandePret", controller.AjouterDemandeP);
   app.post("/api/user/deleteChild", controller.deleteChild);
   app.get(
     "/api/user/mod",

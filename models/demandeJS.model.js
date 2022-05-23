@@ -1,18 +1,17 @@
 const mongoose = require("mongoose");
-const DemandeRn = mongoose.model(
-  "DemandeRn",
+const DemandeJs = mongoose.model(
+  "DemandeJs",
   new mongoose.Schema({
     username: String,
     cin: String,
     id: String,
     demande: String,
+    resultatFile: String,
     children: {
       type: Array,
-
       name: String,
       education: String,
     },
-    inscription: String,
   })
 );
-module.exports = DemandeRn;
+module.exports = DemandeJs;

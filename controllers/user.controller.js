@@ -1,13 +1,93 @@
 const db = require("../models");
 var bcrypt = require("bcryptjs");
+const uploadFile = require("../middlewares/upload");
+const fs = require("fs");
 const User = db.user;
+const DemandeJs = db.DemaneJ;
 const DemandeRn = db.Demande;
+const DemandeP = db.DemandeP;
 exports.getList = (req, res) => {
   User.find({}).then((result) => {
     res.status(200).send(result);
   });
 };
+exports.getListPret = (req, res) => {
+  DemandeP.find({}).then((result) => {
+    res.status(200).send(result);
+  });
+};
 
+exports.upload = async (req, res) => {
+  try {
+    await uploadFile(req, res);
+    if (req.file == undefined) {
+      return res.status(400).send({ message: "Please upload a file!" });
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    // Move jpg file/rename
+
+    newPath = Date.now();
+    fs.rename(
+      __basedir + "/uploads/" + req.file.originalname,
+      __basedir +
+        "/uploads/" +
+        newPath +
+        "." +
+        req.file.originalname.split(".")[1],
+      function (err) {
+        if (err) throw err;
+        console.log(newPath);
+      }
+    );
+
+    res.status(200).send({
+      message: "Uploaded the file successfully: " + newPath,
+      path: newPath + "." + req.file.originalname.split(".")[1],
+    });
+  } catch (err) {
+    if (err.code == "LIMIT_FILE_SIZE") {
+      return res.status(500).send({
+        message: "File size cannot be larger than 2MB!",
+      });
+    }
+    res.status(500).send({
+      message: `${err}`,
+    });
+  }
+};
+
+exports.AddDemandeJs = (req, res) => {
+  const DemandeJ = new DemandeJs({
+    cin: req.body.cin,
+    username: req.body.username,
+    id: req.body.id,
+    demande: req.body.demande,
+    children: req.body.children,
+    resultatFile: req.body.resultatFile,
+  });
+
+  const dem = DemandeJs.findOne({ id: { $in: req.body.id } }, (err, dema) => {
+    if (dema) {
+      res.status(404).send({ message: "vous avez déposer une demande" });
+      return;
+    } else {
+      console.log(req.body.resultatFile);
+      DemandeJ.resultatFile = req.body.resultatFile.join(",");
+
+      DemandeJ.save((err, Demande) => {
+        if (err) {
+          res.status(500).send({ message: err });
+          return;
+        } else {
+          res.status(200).send({ message: "Application faite avec succées" });
+          return;
+        }
+      });
+    }
+  });
+};
 exports.getRapport = (req, res) => {
   User.find({}).then((result) => {
     let maxChilds = [];
@@ -23,6 +103,38 @@ exports.getRapport = (req, res) => {
 
 exports.getListDemandeRn = (req, res) => {
   DemandeRn.find({}).then((result) => {
+    res.status(200).send(result);
+  });
+};
+
+exports.AjouterDemandeP = (req, res) => {
+  const DemandePr = new DemandeP({
+    cin: req.body.cin,
+    username: req.body.username,
+    id: req.body.id,
+    demande: req.body.demande,
+    sommeD: req.body.sommeD,
+    PartitionP: req.body.PartitionP,
+  });
+  const dem = DemandeP.findOne({ id: { $in: req.body.id } }, (err, dema) => {
+    if (dema) {
+      res.status(404).send({ message: "vous avez déposer une demande" });
+      return;
+    } else {
+      DemandePr.save((err, Demande) => {
+        if (err) {
+          res.status(500).send({ message: err });
+          return;
+        } else {
+          res.status(200).send({ message: "Application faite avec succées" });
+          return;
+        }
+      });
+    }
+  });
+};
+exports.getListDemandeJs = (req, res) => {
+  DemandeJs.find({}).then((result) => {
     res.status(200).send(result);
   });
 };
@@ -79,6 +191,12 @@ exports.updateUser = (req, res) => {
 
 exports.getUser = (req, res) => {
   User.findById(req.body.userId, function (err, result) {
+    if (!result) res.status(404).send("Enternal error");
+    else res.status(200).send(result);
+  });
+};
+exports.getDemandePret = (req, res) => {
+  DemandeP.findById(req.body.id, function (err, result) {
     if (!result) res.status(404).send("Enternal error");
     else res.status(200).send(result);
   });
