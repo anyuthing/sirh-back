@@ -19,6 +19,7 @@ module.exports = function (app) {
   app.get("/api/user/all", controller.allAccess);
   app.post("/api/user/deleteUser", controller.deleteUser);
   app.post("/api/user/getUser", controller.getUser);
+  app.post("/api/user/getUserByCin", controller.getUserByCin);
   app.post("/api/user/getDemandePret", controller.getDemandePret);
   app.get(
     "/api/user/getList",
@@ -31,13 +32,16 @@ module.exports = function (app) {
     controller.getListDemandeJs
   );
   app.get("/api/user/ListeDemandeRn", controller.getListDemandeRn);
+  app.get("/api/user/ListeDemandePret", controller.getDemandePret);
   app.get("/api/user/getRapport", controller.getRapport);
   app.get(
     "/api/user/ListeDemandesPret",
 
     controller.getListPret
   );
+  app.post("/api/user/findDemandeRn", controller.findDemandeRn);
   app.post("/api/user/DemandeJs", controller.AddDemandeJs);
+  app.post("/api/user/DemandeRn", controller.AddDemandeRn);
   app.post("/api/user/DemandePret", controller.AjouterDemandeP);
   app.post("/api/user/deleteChild", controller.deleteChild);
   app.get(

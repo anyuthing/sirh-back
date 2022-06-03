@@ -12,7 +12,7 @@ const DemandeRn = mongoose.model(
       name: String,
       education: String,
     },
-    inscription: String,
+    resultatFile: String,
   })
 );
 module.exports = DemandeRn;

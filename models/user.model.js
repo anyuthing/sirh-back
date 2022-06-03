@@ -25,6 +25,8 @@ const User = mongoose.model(
       education: String,
     },
     grade: String,
+    salaire: Number,
+    dateDeRecrutement: Date,
   })
 );
 module.exports = User;

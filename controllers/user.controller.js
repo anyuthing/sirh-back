@@ -57,7 +57,6 @@ exports.upload = async (req, res) => {
     });
   }
 };
-
 exports.AddDemandeJs = (req, res) => {
   const DemandeJ = new DemandeJs({
     cin: req.body.cin,
@@ -88,6 +87,46 @@ exports.AddDemandeJs = (req, res) => {
     }
   });
 };
+exports.AddDemandeRn = (req, res) => {
+  const DemandeR = new DemandeRn({
+    cin: req.body.cin,
+    username: req.body.username,
+    id: req.body.id,
+    demande: req.body.demande,
+    children: req.body.children,
+    resultatFile: req.body.resultatFile,
+  });
+
+  const dem = DemandeRn.findOne({ id: { $in: req.body.id } }, (err, dema) => {
+    if (dema) {
+      res.status(404).send({ message: "vous avez déposer une demande" });
+      return;
+    } else {
+      DemandeR.resultatFile = req.body.resultatFile.join(",");
+
+      DemandeR.save((err, Demande) => {
+        if (err) {
+          res.status(500).send({ message: err });
+          return;
+        } else {
+          res.status(200).send({ message: "Application faite avec succées" });
+          return;
+        }
+      });
+    }
+  });
+};
+exports.findDemandeRn = (req, res) => {
+  const dem = DemandeRn.findOne({ id: { $in: req.body.id } }, (err, dema) => {
+    if (dema) {
+      res.send(false);
+      return;
+    } else {
+      res.send(true);
+      return;
+    }
+  });
+};
 exports.getRapport = (req, res) => {
   User.find({}).then((result) => {
     let maxChilds = [];
@@ -98,6 +137,11 @@ exports.getRapport = (req, res) => {
     });
 
     res.status(200).send({ maxChilds: maxChilds, users: result });
+  });
+};
+exports.getListeDemandePret = (req, res) => {
+  DemandeP.find({}).then((result) => {
+    res.status(200).send(result);
   });
 };
 
@@ -191,9 +235,13 @@ exports.updateUser = (req, res) => {
 
 exports.getUser = (req, res) => {
   User.findById(req.body.userId, function (err, result) {
-    if (!result) res.status(404).send("Enternal error");
+    if (!result) res.status(404).send("Utilisatrur non trouvé");
     else res.status(200).send(result);
   });
+};
+exports.getUserByCin = (req, res) => {
+  const findUSer = User.findOne({ cin: req.body.cin }).exec();
+  return findUSer;
 };
 exports.getDemandePret = (req, res) => {
   DemandeP.findById(req.body.id, function (err, result) {

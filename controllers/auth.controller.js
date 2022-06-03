@@ -59,6 +59,8 @@ exports.signup = (req, res) => {
     roles: [req.body.role],
     grade: req.body.grade,
     children: req.body.children,
+    dateDeRecrutement: req.body.dateDeRecrutement,
+    salaire: req.body.Salaire,
   });
   user.save((err, user) => {
     if (err) {

@@ -6,6 +6,8 @@ const db = require("./models/index");
 const dbConfig = require("./config/db.config");
 const path = require("path");
 
+var dir = path.join(__dirname, "uploads");
+
 global.__basedir = __dirname;
 
 var corsOptions = {
@@ -15,9 +17,15 @@ var corsOptions = {
 app.use(cors(corsOptions));
 // parse requests of content-type - application/json
 app.use(express.json());
+
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
+app.use("/annonces", express.static(path.join(__dirname, "/annonces")));
+
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 // simple route
+
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to Sirh application." });
 });
@@ -77,4 +85,3 @@ function initial() {
     }
   });
 }
-app.use("/uploads", express.static("uploads"));
